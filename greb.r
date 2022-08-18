@@ -95,7 +95,7 @@ rule: load ruletext  ; LOAD always gives back a BLOCK! (vs. LOAD-VALUE)
 
 combinators: copy default-combinators
 for-each [key value] predefined [
-    append combinators reduce [key :value]
+    append combinators spread reduce [key :value]
 ]
 
 
