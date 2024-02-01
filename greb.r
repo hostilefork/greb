@@ -102,7 +102,7 @@ for-each [key value] predefined [
 === INVOKE PARSE ON EACH LINE ===
 
 while [line: read-line] [
-    parse/combinators line rule combinators then [
+    if ok? parse/combinators line rule combinators [
         print line
     ]
 ]
