@@ -92,10 +92,13 @@ jobs:
         type rfiles.txt
         r3 tests\filecompare.r rfiles.txt tests\rfiles.out
 
+    # You must use -Raw with Get-Content to avoid line-ending issues (else
+    # it reads line-by-line and reassembles with CR LF on Windows).
+    #
     - name: (Powershell) Simple Filter of File List
       if: matrix.os == 'windows-latest'
       shell: pwsh
       run: |
-        type tests/\files.txt | r3 greb.r "thru any ['.reb '.r]" > rfiles.txt
+        Get-Content tests\files.txt -Raw | r3 greb.r "thru any ['.reb '.r]" > rfiles.txt
         Get-Content rfiles.txt
         r3 tests\filecompare.r rfiles.txt tests\rfiles.out
