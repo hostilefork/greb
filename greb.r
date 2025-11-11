@@ -1,14 +1,14 @@
 Rebol [
-    Title: "Rebol-based `grep` Program: use PARSE to process lines"
-    File: %greb.r
+    title: "Rebol-based `grep` Program: use PARSE to process lines"
+    file: %greb.r
 
-    Description: {
+    description: --[
         This program is based on the idea of a simple alternative to the UNIX
         utility called grep, which uses Regular Expressions to search lines in
         files.
-    }
+    ]--
 
-    Usage: {
+    usage: --[
         The most convenient way to use greb is to make it a shell alias:
 
             ~/home$ alias greb="r3 %/path/to/greb.r"
@@ -20,14 +20,14 @@ Rebol [
 
         The rule is implicitly wrapped in a BLOCK!, so outermost brackets are
         not required.
-    }
+    ]--
 
-    License: {
+    license: --[
         Licensed under the Lesser GPL, Version 3.0 (the "License");
         you may not use this file except in compliance with the License.
         You may obtain a copy of the License at
         https://www.gnu.org/licenses/lgpl-3.0.html
-    }
+    ]--
 ]
 
 
@@ -68,7 +68,7 @@ if not ruletext: match text! first system.options.args [
     fail ["First argument to greb must be a parse rule"]
 ]
 
-rule: load ruletext  ; LOAD always gives back a BLOCK! (vs. LOAD-VALUE)
+rule: transcode ruletext  ; always gives back a BLOCK!
 
 
 === MAKE HELPER DEFINITIONS VISIBLE TO PARSE CODE IN RULE ===
@@ -95,14 +95,13 @@ rule: load ruletext  ; LOAD always gives back a BLOCK! (vs. LOAD-VALUE)
 
 combinators: copy default-combinators
 for-each [key value] predefined [
-    append combinators spread reduce [key :value]
+    append combinators spread reduce [key value]
 ]
 
 
 === INVOKE PARSE ON EACH LINE ===
 
-while [line: read-line] [
-    if ok? parse/combinators line rule combinators [
-        print line
-    ]
+while [line: read-line stdin] [
+    parse:combinators line rule combinators except e -> [continue]
+    print line
 ]
