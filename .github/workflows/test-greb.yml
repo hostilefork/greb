@@ -81,6 +81,7 @@ jobs:
       if: matrix.os != 'windows-latest'
       run: |
         cat tests/files.txt | r3 greb.r "thru any ['.reb '.r]" > rfiles.txt
+        cat rfiles.txt
         r3 tests/filecompare.r rfiles.txt tests/rfiles.out
 
     - name: (CMD.EXE) Simple Filter of File List
@@ -88,11 +89,13 @@ jobs:
       shell: cmd
       run: |
         type tests\files.txt | r3 greb.r "thru any ['.reb '.r]" > rfiles.txt
+        type rfiles.txt
         r3 tests\filecompare.r rfiles.txt tests\rfiles.out
 
     - name: (Powershell) Simple Filter of File List
-      if: false  # !!! PowerShell corrupts output (LF -> CR LF) on Windows
+      if: matrix.os == 'windows-latest'
       shell: pwsh
       run: |
         type tests/\files.txt | r3 greb.r "thru any ['.reb '.r]" > rfiles.txt
+        Get-Content rfiles.txt
         r3 tests\filecompare.r rfiles.txt tests\rfiles.out
